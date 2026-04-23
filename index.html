@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flow — kaleb.one</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Georgia:wght@400;600;700&display=swap');
+
+:root {
+  --bg: #0a0e17;
+  --surface: rgba(255,255,255,0.04);
+  --surface-2: rgba(255,255,255,0.07);
+  --surface-3: rgba(255,255,255,0.10);
+  --border: rgba(255,255,255,0.08);
+  --border-accent: rgba(6,182,212,0.3);
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --accent: #06b6d4;
+  --accent-dim: #0891b2;
+  --accent-glow: rgba(6,182,212,0.15);
+  --accent-warm: #f59e0b;
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  --accent-violet: #8b5cf6;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --font-sans: 'Inter', -apple-system, sans-serif;
+  --font-serif: 'Georgia', 'Times New Roman', serif;
+  --blur: 20px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Ambient background */
+.bg-ambient {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(6,182,212,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 90%, rgba(139,92,246,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(6,182,212,0.03) 0%, transparent 70%);
+}
+
+.container {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto; padding: 32px 24px;
+}
+
+/* Glass panels */
+.glass {
+  background: var(--surface);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: border-color 0.3s, background 0.3s;
+}
+.glass:hover {
+  border-color: var(--border-accent);
+  background: var(--surface-2);
+}
+
+.glass-sm {
+  background: var(--surface);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+/* Hero section */
+.hero {
+  text-align: center; padding: 48px 24px 32px; margin-bottom: 32px;
+}
+.hero-date {
+  font-size: 13px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 3px; color: var(--accent); margin-bottom: 12px;
+}
+.hero-greeting {
+  font-family: var(--font-serif); font-size: 42px; font-weight: 700;
+  line-height: 1.2; margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 16px; color: var(--text-dim); font-weight: 400;
+}
+
+/* Section titles */
+.section-title {
+  font-family: var(--font-serif); font-size: 22px; font-weight: 600;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+}
+.section-title .icon { font-size: 20px; }
+.section-title .accent-bar {
+  width: 3px; height: 20px; background: var(--accent); border-radius: 2px;
+}
+
+/* Grid layouts */
+.grid-2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+  margin-bottom: 32px;
+}
+.grid-3 {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+  margin-bottom: 32px;
+}
+.grid-4 {
+  display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .hero-greeting { font-size: 30px; }
+}
+
+/* Project cards */
+.project-card {
+  display: flex; align-items: center; gap: 16px;
+}
+.project-id {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--accent); min-width: 40px;
+}
+.project-name {
+  font-size: 16px; font-weight: 600;
+}
+.project-meta {
+  font-size: 13px; color: var(--text-muted); margin-top: 4px;
+}
+.project-status {
+  display: inline-block; padding: 2px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.status-active { background: rgba(16,185,129,0.15); color: var(--accent-green); }
+.status-high { background: rgba(239,68,68,0.15); color: var(--accent-red); }
+.status-paused { background: rgba(100,116,139,0.15); color: var(--text-muted); }
+
+/* Health panel */
+.health-stat {
+  text-align: center; padding: 16px;
+}
+.health-value {
+  font-size: 36px; font-weight: 700; font-family: var(--font-serif);
+  color: var(--accent);
+}
+.health-label {
+  font-size: 12px; color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 1px; margin-top: 4px;
+}
+.health-unit {
+  font-size: 14px; color: var(--text-dim);
+}
+
+/* Weight progress bar */
+.progress-bar {
+  width: 100%; height: 6px; background: var(--surface-3);
+  border-radius: 3px; overflow: hidden; margin-top: 12px;
+}
+.progress-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-green));
+  transition: width 0.8s ease;
+}
+
+/* Ecosystem app grid */
+.app-card {
+  text-decoration: none; color: inherit; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 20px 12px; text-align: center;
+  transition: transform 0.2s, border-color 0.3s, background 0.3s;
+}
+.app-card:hover {
+  transform: translateY(-2px);
+}
+.app-icon {
+  font-size: 28px; width: 52px; height: 52px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 14px; background: var(--surface-3);
+}
+.app-card:hover .app-icon {
+  background: var(--accent-glow);
+}
+.app-name {
+  font-size: 13px; font-weight: 600;
+}
+.app-desc {
+  font-size: 11px; color: var(--text-muted); line-height: 1.4;
+}
+
+/* Finance highlights */
+.finance-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.finance-item:last-child { border-bottom: none; }
+.finance-label { font-size: 14px; color: var(--text-dim); }
+.finance-value { font-size: 16px; font-weight: 600; color: var(--accent-warm); }
+
+/* Family */
+.family-member {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0;
+}
+.family-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--surface-3); display: flex; align-items: center;
+  justify-content: center; font-size: 16px;
+}
+.family-name { font-weight: 600; font-size: 14px; }
+.family-notes { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+/* Capture section */
+.capture-box {
+  display: flex; gap: 12px; align-items: center;
+}
+.capture-input {
+  flex: 1; padding: 12px 16px; border-radius: var(--radius-sm);
+  background: var(--surface-3); border: 1px solid var(--border);
+  color: var(--text); font-size: 14px; font-family: var(--font-sans);
+  outline: none; transition: border-color 0.3s;
+}
+.capture-input::placeholder { color: var(--text-muted); }
+.capture-input:focus { border-color: var(--accent); }
+.capture-btn {
+  padding: 12px 24px; border-radius: var(--radius-sm);
+  background: var(--accent); color: var(--bg); border: none;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.capture-btn:hover { opacity: 0.9; }
+.capture-btn:active { transform: scale(0.98); }
+
+/* Quick actions */
+.quick-action {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: var(--radius-sm);
+  background: var(--surface-2); border: 1px solid var(--border);
+  font-size: 13px; font-weight: 500; color: var(--text);
+  cursor: pointer; text-decoration: none;
+  transition: border-color 0.3s, background 0.3s, transform 0.15s;
+}
+.quick-action:hover {
+  border-color: var(--border-accent); background: var(--accent-glow);
+  transform: translateY(-1px);
+}
+
+/* Footer */
+.footer {
+  text-align: center; padding: 32px 0 16px;
+  font-size: 12px; color: var(--text-muted);
+}
+.footer a { color: var(--accent); text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeIn 0.5s ease forwards; }
+.fade-in-d1 { animation-delay: 0.1s; opacity: 0; }
+.fade-in-d2 { animation-delay: 0.2s; opacity: 0; }
+.fade-in-d3 { animation-delay: 0.3s; opacity: 0; }
+.fade-in-d4 { animation-delay: 0.4s; opacity: 0; }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 24px; color: var(--text-muted);
+  font-size: 14px; font-style: italic;
+}
+</style>
+</head>
+<body>
+
+<div class="bg-ambient"></div>
+
+<div class="container" id="app">
+  <!-- Populated by JS below -->
+</div>
+
+<script>
+// ─── Data injected by build.py ──────────────────────────────────────────
+const PAGE_DATA = "__FLOW_DATA__";
+
+// ─── Helper: ordinal date ───────────────────────────────────────────────
+function formatDate(iso) {
+  const d = iso ? new Date(iso + 'T12:00:00') : new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+function getGreeting() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
+// ─── Render ─────────────────────────────────────────────────────────────
+function render(data) {
+  const today = formatDate(data.today);
+  const greeting = getGreeting();
+  const weightEntries = data.health?.weight || [];
+  const latestWeight = weightEntries.length > 0 ? weightEntries[weightEntries.length - 1] : null;
+  const weightGoal = (data.health?.goals || []).find(g => g.type === 'weight_target');
+  const weightLatest = (data.health?.goals || []).find(g => g.type === 'weight_current') || latestWeight;
+  const activeProjects = data.projects?.active || [];
+  const family = data.household?.family || [];
+  const finHighlights = data.finance?.highlights || [];
+  const apps = data.ecosystem || [];
+
+  // Weight progress calculation
+  let weightPct = 0;
+  if (weightLatest && weightGoal) {
+    // Progress from 250 (start) toward goal
+    const start = 250;
+    const current = weightLatest.value || (latestWeight ? latestWeight.weight : start);
+    const target = weightGoal.value;
+    const total = start - target;
+    const lost = start - current;
+    weightPct = Math.round((lost / total) * 100);
+    if (weightPct < 0) weightPct = 0;
+    if (weightPct > 100) weightPct = 100;
+  }
+
+  let html = `
+  <!-- Hero -->
+  <section class="hero glass fade-in" style="margin-bottom:32px">
+    <div class="hero-date">${today}</div>
+    <h1 class="hero-greeting">${greeting}, Kaleb</h1>
+    <p class="hero-sub">Your morning flow — everything at a glance</p>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="fade-in fade-in-d1" style="margin-bottom:32px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+    <a href="https://kitchen.kaleb.one" class="quick-action">🍳 Cook</a>
+    <a href="https://read.kaleb.one" class="quick-action">📚 Read</a>
+    <a href="https://watch.kaleb.one" class="quick-action">🎬 Watch</a>
+    <a href="https://projects.kaleb.one" class="quick-action">📋 Projects</a>
+    <a href="https://brain.kaleb.one" class="quick-action">🧠 Brain</a>
+  </section>
+
+  <!-- Two-column: Projects + Health -->
+  <div class="grid-2 fade-in fade-in-d2">
+    <!-- Active Projects -->
+    <div class="glass">
+      <div class="section-title">
+        <span class="icon">📋</span>
+        <span class="accent-bar"></span>
+        Active Projects
+      </div>
+      ${activeProjects.length > 0 ? activeProjects.map(p => `
+        <div class="project-card" style="margin-bottom:14px">
+          <div>
+            <span class="project-id">${p.id}</span>
+            <span class="project-status ${p.status === 'active' ? 'status-active' : 'status-paused'}">${p.status}</span>
+            ${p.priority === 'high' ? '<span class="project-status status-high">high</span>' : ''}
+          </div>
+          <div style="flex:1">
+            <div class="project-name">${p.name}</div>
+            <div class="project-meta">${p.domain}${p.target ? ' · Due ' + p.target : ''}${p.tags ? ' · ' + p.tags : ''}</div>
+          </div>
+        </div>
+      `).join('') : '<div class="empty-state">No active projects</div>'}
+    </div>
+
+    <!-- Health Snapshot -->
+    <div class="glass">
+      <div class="section-title">
+        <span class="icon">🏥</span>
+        <span class="accent-bar"></span>
+        Health Snapshot
+      </div>
+      <div class="grid-3" style="gap:8px;margin-bottom:16px">
+        <div class="health-stat glass-sm">
+          <div class="health-value">${latestWeight ? latestWeight.weight : weightLatest ? weightLatest.value : '—'}</div>
+          <div class="health-label">Current lbs</div>
+        </div>
+        <div class="health-stat glass-sm">
+          <div class="health-value" style="color:var(--accent-green)">${weightGoal ? weightGoal.value : '—'}</div>
+          <div class="health-label">Goal lbs</div>
+        </div>
+        <div class="health-stat glass-sm">
+          <div class="health-value" style="color:var(--accent-warm)">2.1%</div>
+          <div class="health-label">Progress</div>
+        </div>
+      </div>
+      ${weightPct > 0 ? `
+      <div style="margin-top:8px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:4px">
+          <span>250 lbs (start)</span>
+          <span>${weightGoal ? weightGoal.value : '?'} lbs (goal)</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${weightPct}%"></div>
+        </div>
+      </div>` : ''}
+      ${weightEntries.length > 1 ? `
+      <div style="margin-top:16px;font-size:13px;color:var(--text-dim)">
+        Last logged: ${latestWeight ? latestWeight.date : '—'}
+      </div>` : ''}
+    </div>
+  </div>
+
+  <!-- Two-column: Finance + Household -->
+  <div class="grid-2 fade-in fade-in-d3">
+    <!-- Finance -->
+    <div class="glass">
+      <div class="section-title">
+        <span class="icon">💰</span>
+        <span class="accent-bar"></span>
+        Finance
+      </div>
+      ${finHighlights.length > 0 ? finHighlights.map(h => `
+        <div class="finance-item">
+          <span class="finance-label">${h.label}</span>
+          <span class="finance-value">${h.value}</span>
+        </div>
+      `).join('') : '<div class="empty-state">No finance data yet</div>'}
+    </div>
+
+    <!-- Household -->
+    <div class="glass">
+      <div class="section-title">
+        <span class="icon">🏠</span>
+        <span class="accent-bar"></span>
+        Household
+      </div>
+      ${family.length > 0 ? family.map(f => `
+        <div class="family-member">
+          <div class="family-avatar">${f.name.charAt(0) === '*' ? f.name.match(/\*\*(.+?)\*\*/)?.[1]?.[0] || '?' : f.name[0]}</div>
+          <div>
+            <div class="family-name">${f.name.replace(/\*\*/g, '')}</div>
+            <div class="family-notes">${(f.notes || '').substring(0, 80)}</div>
+          </div>
+        </div>
+      `).join('') : '<div class="empty-state">No household data</div>'}
+      ${data.household?.home?.address ? `
+        <div style="margin-top:12px;font-size:13px;color:var(--text-dim);padding-top:12px;border-top:1px solid var(--border)">
+          📍 ${data.household.home.address}
+        </div>` : ''}
+    </div>
+  </div>
+
+  <!-- Capture -->
+  <section class="glass fade-in fade-in-d4" style="margin-bottom:32px">
+    <div class="section-title">
+      <span class="icon">✏️</span>
+      <span class="accent-bar"></span>
+      Quick Capture
+    </div>
+    <div class="capture-box">
+      <input type="text" class="capture-input" id="capture-input" placeholder="Type a thought, task, or note to add to your inbox...">
+      <button class="capture-btn" onclick="handleCapture()">Capture</button>
+    </div>
+    <div id="capture-feedback" style="margin-top:8px;font-size:13px;display:none"></div>
+  </section>
+
+  <!-- Ecosystem -->
+  <section class="fade-in fade-in-d4" style="margin-bottom:32px">
+    <div class="section-title">
+      <span class="icon">🌐</span>
+      <span class="accent-bar"></span>
+      Your Ecosystem
+    </div>
+    <div class="grid-4" style="grid-template-columns: repeat(5, 1fr);">
+      ${apps.map(app => `
+        <a href="${app.href}" class="app-card glass-sm">
+          <div class="app-icon">${app.icon}</div>
+          <div class="app-name">${app.name}</div>
+          <div class="app-desc">${app.desc}</div>
+        </a>
+      `).join('')}
+    </div>
+  </section>
+
+  <div class="footer">
+    flow.kaleb.one · Built with ❤️ from your second brain · <a href="https://kaleb.one">← Hub</a>
+  </div>
+  `;
+
+  document.getElementById('app').innerHTML = html;
+}
+
+// ─── Capture handler ────────────────────────────────────────────────────
+function handleCapture() {
+  const input = document.getElementById('capture-input');
+  const feedback = document.getElementById('capture-feedback');
+  const text = input.value.trim();
+  if (!text) return;
+
+  feedback.style.display = 'block';
+  feedback.style.color = 'var(--accent)';
+  feedback.textContent = '✓ Copied to clipboard — paste into your vault inbox file.';
+  navigator.clipboard.writeText(text).catch(() => {
+    feedback.style.color = 'var(--accent-warm)';
+    feedback.textContent = '⚡ "' + text.substring(0, 50) + (text.length > 50 ? '...' : '') + '" — add this to domains/inbox/ in your vault.';
+  });
+  input.value = '';
+}
+
+// Capture on Enter
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.activeElement?.id === 'capture-input') {
+    handleCapture();
+  }
+});
+
+// ─── Init ────────────────────────────────────────────────────────────────
+const data = typeof PAGE_DATA === 'string' ? JSON.parse(PAGE_DATA) : PAGE_DATA;
+render(data);
+</script>
+</body>
+</html>

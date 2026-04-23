@@ -1,0 +1,40 @@
+name: Build & Deploy flow.kaleb.one
+
+on:
+  repository_dispatch:
+    types: [rebuild-flow]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout flow-kaleb-one
+        uses: actions/checkout@v4
+
+      - name: Checkout second-brain-vault (sparse)
+        uses: actions/checkout@v4
+        with:
+          repository: triursa/second-brain-vault
+          ref: master
+          path: _vault
+          token: ${{ secrets.REPO_PAT }}
+          sparse-checkout: |
+            domains/health
+            domains/household
+            domains/finance
+            domains/projects
+            domains/ai-tooling
+
+      - name: Run build
+        env:
+          VAULT_DIR: ${{ github.workspace }}/_vault/domains
+          OUTPUT_DIR: ${{ github.workspace }}/_site
+        run: python3 scripts/build.py
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy _site --project-name=flow --branch=main
